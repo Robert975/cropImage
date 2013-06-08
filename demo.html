@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<body>
+		<h1>Crop image</h1>
+		<h3>1 first upload image</h3>
+		<h3>2 click crop btn</h3>
+		<div id="zone"></div>
+		<input type="button" id="crop-btn" value="crop"/>
+		<input type="file" id="upload-btn" value="upload"/>
+		<script src="jquery.js"></script>
+		<script src="crop-image.js"></script>
+	
+		<script>
+				var cropImage = $("#zone").cropImage({
+						width : 400,
+						height : 400,
+						bgUrl : "previewBg.png",
+						uploadBtnId : "upload-btn",
+						cropFrameX : 100,
+						cropFrameY : 100,
+						cropFrameWidth : 200,
+						cropFrameHeight :200
+				});
+				$("#crop-btn").click(function() {
+					var $img = $("#crop-image")
+								if ($img.size() == 0) {
+										$img = $("<img>").attr("id", "crop-image");
+										$img.appendTo(document.body);
+								}
+					
+						var url = cropImage.exportImageUrl();
+						$img.attr("src", url);
+				});
+		</script>
+	</body>
+</html>
