@@ -52,11 +52,11 @@
 										return;
 								}
 								if (config.cropRealHeight) {
-										config.cropZoom = Math.round(config.cropRealHeight / config.cropFrameHeight); 
+										config.cropZoom = Math.round(config.cropRealHeight / config.cropFrameHeight * 10000) / 10000; 
 								}
 								
 								if (config.cropRealWidth) {
-										config.cropZoom = Math.round(config.cropRealWidth / config.cropFrameWidth); 
+										config.cropZoom = Math.round(config.cropRealWidth / config.cropFrameWidth * 10000) / 10000; 
 								}
 							},
 							

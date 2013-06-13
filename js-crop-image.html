@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head></head>
+	<body>
+		
+		<div id="desc" style="background:url('previewBg.png')">
+		</div>
+		
+		<div id="cut"></div>
+		<input type="button" id="crop"/>
+		<input type="file" id="upload"/>
+		<script src="jquery.js"></script>
+		<script src="js-crop-image.js"></script>
+		<script>
+			$(function() {
+				var cropimage = $("#desc").CropImageXY();
+				cropimage.importImage("http://w1.hoopchina.com.cn/static/www/2013-06-13/1371087985dh.jpg");
+		
+				$("#crop").click(function() {
+					var cutSheet = cropimage.crop();
+					$("#cut").css({
+						width : cutSheet.width,
+						height : cutSheet.height,
+						overflow : "hidden",
+						position : "relative"
+					}).empty();
+					$("<img>").attr("src", cutSheet.url).css({
+						"position" : "absolute",
+						left : -cutSheet.startX,
+						top : -cutSheet.startY
+					}).appendTo($("#cut"));
+			
+				});
+				
+			
+				$("#upload").change(function() {
+					var $this = $(this),
+							value = $this.val();
+					if (!value) return;
+					cropimage.importLocalImage($("#upload"));
+					$this.val("");
+				});
+
+			});
+						
+		</script>
+	</body>
+</html>
