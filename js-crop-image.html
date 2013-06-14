@@ -13,9 +13,6 @@
 		<script src="js-crop-image.js"></script>
 		<script>
 			$(function() {
-				var cropimage = $("#desc").CropImageXY();
-				cropimage.importImage("http://w1.hoopchina.com.cn/static/www/2013-06-13/1371087985dh.jpg");
-		
 				$("#crop").click(function() {
 					var cutSheet = cropimage.crop();
 					$("#cut").css({
@@ -29,8 +26,17 @@
 						left : -cutSheet.startX,
 						top : -cutSheet.startY
 					}).appendTo($("#cut"));
-			
 				});
+				
+				
+				var cropimage = $("#desc").CropImageXY({
+					dragging : function() {
+						$("#crop").click();
+					}
+				});
+				cropimage.importImage("http://w1.hoopchina.com.cn/static/www/2013-06-13/1371087985dh.jpg");
+		
+
 				
 			
 				$("#upload").change(function() {

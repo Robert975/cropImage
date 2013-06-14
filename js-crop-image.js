@@ -17,7 +17,11 @@ $.fn.CropImageXY = function(config) {
 			cropFrameHeight : 200,
 			cropRealWidth : 200,
 			cropRealHeight : 200,
-			borderColor : "green"
+			borderColor : "green",
+			startDrag : function() {},
+			dragging : function() {},
+			endDrag : function() {}
+			
 		},
 		
 		container : null,
@@ -80,26 +84,44 @@ $.fn.CropImageXY = function(config) {
 			this.cropFrame = cropFrame;
 		},
 		
+		getImagePositonAboutCenter : function() {
+			var imageWidth = this.image.displayWidth,
+					imageHeight = this.image.displayHeight,
+					containerWidth = this.config.width,
+					containerHeight = this.config.height;
+			var left = (containerWidth - imageWidth) / 2,
+					top = (containerHeight - imageHeight) / 2;
+			return {
+				left : left,
+				top : top
+			}
+		},
+		
 		importImage : function(url) {
 			this.container.find("img").remove();
 			var config = this.config;
 			var image = $("<img>")
 					.css({
-						position : "absolute",
-						top : config.cropFrameY + "px",
-						left : config.cropFrameX + "px"
+						position : "absolute"
 					}).attr("src", url);
+					
 			var that = this;
 			this.calImageWidthAndHeight(url, function(width, height) {
+					image.realWidth = width;
+					image.realHeight = height;
+					image.displayWidth = width / that.cropZoom;
+					image.displayHeight = height / that.cropZoom;
+					that.image = image;
+					var position = that.getImagePositonAboutCenter();
 					image.css({
-							width : width / that.cropZoom + "px",
-							height : height / that.cropZoom + "px"
+							width : image.displayWidth + "px",
+							height : image.displayHeight + "px",
+							top : position.top + "px",
+							left : position.left + "px"
 						}).bind("mousedown", function(e) {
 							e.preventDefault();
 						}).appendTo(that.container)
 			});
-					
-			this.image = image;
 		},
 		
 		calImageWidthAndHeight : function(url, callback) {
@@ -163,14 +185,17 @@ $.fn.CropImageXY = function(config) {
 					currentY = e.originalEvent.y || e.originalEvent.layerY || 0; 
 					isDraw = true;
 					$(this).css("cursor", "crosshair");
+					that.config.startDrag();
 			}).live("mouseup", function() {
 					isDraw = false;
 					currentX = currentY = 0;
 					$(this).css("cursor", "auto");
+					that.config.endDrag();
 			}).live("mouseleave", function() {
 					isDraw = false;
 					currentX = currentY = 0;
 					$(this).css("cursor", "auto");
+					that.config.endDrag();
 			}).live("mousemove", function(e) {
 					if (!isDraw) return;
 					var drawX = (e.originalEvent.x || e.originalEvent.layerX || 0) - currentX,
@@ -185,6 +210,7 @@ $.fn.CropImageXY = function(config) {
 						top : top + drawY + "px",
 						left : left + drawX + "px"
 					});
+					that.config.dragging();
 			});
 			//for ie
 			document.ondragstart = function() { 
