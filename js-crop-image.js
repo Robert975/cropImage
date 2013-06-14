@@ -20,7 +20,8 @@ $.fn.CropImageXY = function(config) {
 			borderColor : "green",
 			startDrag : function() {},
 			dragging : function() {},
-			endDrag : function() {}
+			endDrag : function() {},
+			loadImage : function() {}
 			
 		},
 		
@@ -121,6 +122,7 @@ $.fn.CropImageXY = function(config) {
 						}).bind("mousedown", function(e) {
 							e.preventDefault();
 						}).appendTo(that.container)
+					that.config.loadImage();
 			});
 		},
 		
@@ -184,17 +186,17 @@ $.fn.CropImageXY = function(config) {
 					currentX = e.originalEvent.x || e.originalEvent.layerX || 0; 
 					currentY = e.originalEvent.y || e.originalEvent.layerY || 0; 
 					isDraw = true;
-					$(this).css("cursor", "crosshair");
+					$(selector).css("cursor", "crosshair");
 					that.config.startDrag();
 			}).live("mouseup", function() {
 					isDraw = false;
 					currentX = currentY = 0;
-					$(this).css("cursor", "auto");
+					$(selector).css("cursor", "auto");
 					that.config.endDrag();
 			}).live("mouseleave", function() {
 					isDraw = false;
 					currentX = currentY = 0;
-					$(this).css("cursor", "auto");
+					$(selector).css("cursor", "auto");
 					that.config.endDrag();
 			}).live("mousemove", function(e) {
 					if (!isDraw) return;
@@ -223,8 +225,14 @@ $.fn.CropImageXY = function(config) {
 				url : this.image.attr("src"),
 				startX : -(parseInt(this.image.css("left")) - this.config.cropFrameX) * this.cropZoom,
 				startY : -(parseInt(this.image.css("top")) - this.config.cropFrameY) * this.cropZoom,
-				width : this.config.cropFrameWidth * this.cropZoom,
-				height : this.config.cropFrameHeight * this.cropZoom
+				cropStartX : -(parseInt(this.image.css("left")) - this.config.cropFrameX),
+				cropStartY : -(parseInt(this.image.css("top")) - this.config.cropFrameY),
+				cropWidth : this.config.cropFrameWidth * this.cropZoom,
+				cropHeight : this.config.cropFrameHeight * this.cropZoom,
+				realWidth : this.image.realWidth,
+				realHeight : this.image.realHeight,
+				displayWidth : this.image.displayWidth,
+				displayHeight : this.image.displayHeight
 			};
 		}
 	}
